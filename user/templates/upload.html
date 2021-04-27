@@ -1,0 +1,53 @@
+{% extends "title_base.html"  %}
+{% block title  %}
+{% load staticfiles %}
+<link type="text/css" rel="stylesheet" href="{% static "css/common.css" %}">
+<link type="text/css" rel="stylesheet" href="{% static "css/index.css" %}">
+<link type="text/css" rel="stylesheet" href="{% static "css/upload.css" %}">
+</head>
+
+<body class="index">
+    <div class="header">
+{#		<a href="/" class="logo" title="首页"><img alt="音乐" src="{% static "image/logo.png" %}"></a>#}
+		<div class="search-box" style="top: 20px">
+
+			<form id="searchForm" action="{% url 'search' 1 %}" method="post" target="_blank">
+                {% csrf_token %}
+                <div class="search-keyword">
+                    <input id="kword" name="kword" type="text" class="keyword" maxlength="120" placeholder=""  />
+                </div>
+	            <input id="subSerch" type="submit" class="search-button" value="搜 索" />
+	        </form>
+		</div>
+	</div>
+    <div class="nav-box">
+        <div class="nav-box-inner">
+            <ul class="nav clearfix">
+                <li><a href="/">首页</a></li>
+                <li><a href="{% url 'ranking' %}" target="_blank">歌曲排行</a></li>
+                <li><a href="{% url 'home' 1 %}" target="_blank">用户中心</a></li>
+            </ul>
+        </div>
+    </div>
+{#    <form enctype="multipart/form-data" action="" method="POST">#}
+{#	{% csrf_token %}#}
+{#       <input type="file" name="upload" />#}
+{#       <br/>#}
+{#       <input type="submit" value="上传"/>#}
+{#    </form>#}
+    <div id="uploadform">
+        <form method="POST" enctype="multipart/form-data" id="upload_form">
+         {% csrf_token %}
+            <label>{{form}}</label>
+            <input type="submit" class="btn btn-primary" value="批量上传" name="upload" id="shangchuan"/>
+        </form>
+        {% if msg %}
+            <div class="msg">文件上传成功！ </div>
+        {% endif %}
+
+    </div>
+
+<script data-main="{% static "js/upload.js" %}" src="{% static "js/require.js" %}"></script>
+{% endblock  %}
+
+

@@ -1,0 +1,61 @@
+{% extends "title_base.html"  %}
+{% block title  %}
+{% load staticfiles %}
+<link type="text/css" rel="stylesheet" href="{% static "css/common.css" %}">
+<link type="text/css" rel="stylesheet" href="{% static "css/register.css" %}">
+</head>
+
+<body class="review">
+<div class="wrapper">
+    <div class="header clearfix">
+        <a href="/" class="logo">我的音乐</a>
+
+        <span class="logo-tip">Hi,我的音乐欢迎您!</span>
+    </div>
+
+    <div class="content clearfix">
+        <div id="unauth_main" class="login-regist">
+            <div class="regist-box switch_box">
+                <div class="title">修改密码</div>
+                <div class="itembox user-name" style="font-size: 16px">
+                    <p>用户名：  {{ user.username }}</p><br>
+                    <p>原密码：  <input id="oldpwd" type="password"></p><br>
+                    <p>新密码1：<input id="newpwd1" type="password"></p><br>
+                    <p>新密码2：<input id="newpwd2" type="password"></p><br>
+                    <input id="modifybtn" type="submit" value="修改" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script language="JavaScript" src="{% static "js/jquery.min.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#modifybtn').click(function(){
+		var oldpwd = $('#oldpwd').val();
+        var newpwd1 = $('#newpwd1').val();
+        var newpwd2 = $('#newpwd2').val();
+
+        $.ajax({
+          url:'/user/modify?oldpwd=' + oldpwd + '&newpwd1=' + newpwd1 + '&newpwd2=' + newpwd2,
+          type:'GET',
+          timeout:10000,
+          error:function(http,err){
+              window.alert('修改密码失败');
+          },
+          success:function(data){
+              if ('ok' == data){
+                  window.alert('修改成功，请重新登陆');
+                  location.reload(true)
+              }
+              else{
+                  window.alert('修改密码失败');
+              }
+              console.log(data)
+          }
+        });
+	});
+});
+</script>
+<script data-main="{% static "js/register.js" %}" src="{% static "js/require.js" %}"></script>
+{% endblock  %}

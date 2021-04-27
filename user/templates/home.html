@@ -1,0 +1,166 @@
+{% extends "title_base.html"  %}
+{% block title  %}
+{% load staticfiles %}
+<link type="text/css" rel="stylesheet" href="{% static "css/common.css" %}">
+<link type="text/css" rel="stylesheet" href="{% static "css/user.css" %}">
+</head>
+
+<body class="member">
+    <div class="header">
+{#        <a href="/" class="logo" title="首页"><img src="{% static "image/logo.png" %}" alt="找不到图片"></a>#}
+        <div class="search-box" style="top: 20px">
+            <form id="searchForm" action="{% url 'search' 1 %}" method="post" target="_blank">
+            {% csrf_token %}
+                <div class="search-keyword">
+                <input id="kword" name="kword" type="text" class="keyword" maxlength="120" placeholder=""/>
+                </div>
+                <input id="subSerch" type="submit" class="search-button" value="搜 索" />
+            </form>
+        </div>
+    </div>
+
+	<div class="nav-box">
+		<div class="nav-box-inner">
+			<ul class="nav clearfix">
+				<li><a href="/">首页</a></li>
+				<li><a href="{% url 'ranking' %}" target="_blank">歌曲排行</a></li>
+	    	    <li><a href="{% url 'home' 1 %}">用户中心</a></li>
+			</ul>
+		</div>
+	</div><!--end nav-box-->
+    <!-- <div class="mod_profile js_user_data" style="">
+        <div class="section_inner">
+            <p class="profile__tit" >用户类型：{{ user_info.level }}  签到送积分  积分兑换VIP</p>
+            <h1 class="profile__tit">
+                <span class="profile__name">{{ user.username }}</span>
+            </h1>
+                <a href="{% url 'logout' %}" style="color:white;">退出登录</a>
+        </div>
+    </div> -->
+    <!--<div>
+        <div class="section_inner">
+            <span class="mod_tab__item mod_tab__current" id="hear_tab">我听过的歌</span>
+        </div>
+    </div>
+    -->
+	<div class="main main--profile" style="">
+        <ul class="nav clearfix mod_tab__current">
+            {% if userlevel %}
+                <li><h3>管理员:{{ user.username }}</h3></li>
+            {% else %}
+                <li><h3>用户:{{ user.username }}</h3></li>
+            {% endif %}
+            <li><h3>类型:{{ user_info.level }}</h3></li>
+            <li><h3>积分:{{ user_info.integral }}</h3></li>
+            <li><button type="button" id='signin'><h3>签到送积分</h3></button></li>
+            <li><button type="button" id='levelup'><h3>积分兑换VIP</h3></button></li>
+            <li><a href="{% url 'info' %}"><h3>修改信息</h3></a></li>
+            {% if userlevel %}
+                <li><a href="{% url 'upload' %}"><h3>上传歌曲文件</h3></a></li>
+            {% endif %}
+            <li><a href="{% url 'logout' %}"><h3>退出登录</h3></a></li>
+        </ul>
+        <!--<p class="mod_tab__item mod_tab__current" id="hear_tab" align="right">我听过的歌</p>-->
+		<div class="js_box" style="display: block;">
+			<div class="profile_cont">
+				<div class="js_sub" style="display: block;">
+					<div class="mod_songlist">
+                        <h2><p class="nav clearfix mod_tab__current" id="hear_tab" align="center">我听过的歌</p></h2>
+						<ul class="songlist__header">
+							<li class="songlist__header_name">歌曲</li>
+							<li class="songlist__header_author">歌手</li>
+							<li class="songlist__header_time">删除</li>
+						</ul>
+						<ul class="songlist__list">
+                            {% for item in contacts.object_list %}
+							<li>
+								<div class="songlist__item songlist__item--even">
+                            {% if item.song_id == user_info.position and user_info.level == 'VIP用户'%}
+							    <div class="songlist__songname">
+                                    <a href="{% url 'play' item.song_id %}" class="js_song songlist__songname_txt" style="color:red">{{ item.song_name }}</a>
+							    </div>
+                            {% else %}
+                                <div class="songlist__songname">
+                                    <a href="{% url 'play' item.song_id %}" class="js_song songlist__songname_txt">{{ item.song_name }}</a>
+							    </div>
+                            {% endif %}
+							    <div class="songlist__artist">
+                                    <a href="javascript:;" class="singer_name">{{ item.song_singer }}</a>
+							    </div>
+							    <div class="songlist__time"><button type="button" data-id='{{ item.song_id }}' class='delete_song'>删除</button></div>
+								</div>
+							</li>
+                            {% endfor %}
+						</ul>
+					</div><!--end mod_songlist-->
+
+                    <!--分页-->
+					<div class="page-box">
+						<div class="pagebar" id="pageBar">
+
+                            {% if contacts.has_previous %}
+                            <a href="{% url 'home' contacts.previous_page_number %}" class="prev" target="_self"><i></i>上一页</a>
+                            {% endif %}
+
+                            {% for page in contacts.paginator.page_range %}
+                                {% if contacts.number == page %}
+                                    <span class="sel">{{ page }}</span>
+                                {% else %}
+                                    <a href="{% url 'home' page %}" target="_self">{{ page }}</a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if contacts.has_next %}
+                            <a href="{% url 'home' contacts.next_page_number %}" class="next" target="_self">下一页<i></i></a>
+                            {% endif %}
+
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div><!-- end main -->
+<script language="JavaScript" src="{% static "js/jquery.min.js" %}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $('.delete_song').click(function(){
+		var song_id = $(this).attr('data-id');
+		console.log(song_id);
+        $.ajax({
+          url:'/user/delete?songid=' + song_id,
+          type:'GET',
+          timeout:10000,
+          error:function(http,err){
+          },
+          success:function(data){
+              location.reload(true)
+          }
+        });
+	});
+    $('#signin').click(function(){
+        $.ajax({
+            url:'/user/signin',
+            type:'GET',
+            timeout:10000,
+            error: function (http,err) {
+            },
+            success:function(data){
+                location.reload(true)
+            }
+        })
+    });
+    $('#levelup').click(function(){
+        $.ajax({
+            url:'/user/levelup',
+            type:'GET',
+            timeout:10000,
+            error: function(http, err){
+            },
+            success:function(data){
+                location.reload(true)
+            }
+        });
+    });
+});
+</script>
+{% endblock  %}
