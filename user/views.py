@@ -98,6 +98,9 @@ def infoView(request):
     return render(request, 'info.html', locals())
 
 
+'''
+实现单个文件上传接口
+'''
 def single_upload(f):
     file_path = os.path.join(settings.FILE_URL,f.name)
 
@@ -106,6 +109,10 @@ def single_upload(f):
         destination.write(chunk)
     destination.close()
 
+
+'''
+实现多个文件上传接口
+'''
 @login_required(login_url='/user/login.html')
 def upload(request):
     # if request.method == 'GET':  #单个文件上传

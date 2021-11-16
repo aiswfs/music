@@ -29,5 +29,6 @@ def indexView(request):
 # def indexranking(request):
 #
 #     return render(request,'index.html'.locals())
+
 def test(request):
     return render(request,'index.html')

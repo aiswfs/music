@@ -17,7 +17,7 @@ cryptography==2.9.2
 cycler==0.10.0
 decorator==3.4.0
 distlib==0.3.1
-Django==2.1
+django==2.1
 django-adminfiles==1.0.1
 django-celery==3.1.17
 django-cleanup==0.3.1
@@ -40,7 +40,7 @@ Jinja2==2.11.2
 kiwisolver==1.2.0
 kombu==5.0.2
 livereload==2.6.3
-lxml @ file:///C:/Users/00010328/Downloads/lxml-4.6.2-cp38-cp38-win_amd64.whl
+lxml
 Markdown==3.3.3
 MarkupSafe==0.23
 matplotlib==3.3.2
@@ -75,7 +75,6 @@ pypiwin32==223
 PyQt5==5.15.2
 PyQt5-sip==12.8.1
 PyRect==0.1.4
-pyrfc @ file:///C:/Users/00010328/Downloads/pyrfc-2.0.1-cp38-cp38-win_amd64.whl
 PyScreeze==0.1.26
 pytest==3.4.1
 python-dateutil==2.8.1
